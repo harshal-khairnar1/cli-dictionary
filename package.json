@@ -1,0 +1,30 @@
+{
+  "name": "cli-dictionary",
+  "version": "1.0.0",
+  "description": "A command line dictionary, now look for word right from your working terminal",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "cli-dictionary",
+    "cli",
+    "dictionary",
+    "words",
+    "synonyms",
+    "antonyms"
+  ],
+  "author": "harshal khairnar",
+  "license": "ISC",
+  "bin": {
+    "dict": "./bin/index.js"
+  },
+  "dependencies": {
+    "axios": "^0.19.2",
+    "boxen": "^4.2.0",
+    "chalk": "^3.0.0",
+    "dotenv": "^8.2.0",
+    "ora": "^4.0.3",
+    "yargs": "^15.1.0"
+  }
+}
