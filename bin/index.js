@@ -61,7 +61,7 @@ async function main(command, word) {
             break;
 
           case "play":
-            letsPlay();
+            await letsPlay();
             break;
         }
       }
@@ -92,13 +92,14 @@ main(command, word);
  */
 function getDefinition(word) {
   return new Promise(async (resolve, reject) => {
+    const spinner = ora("loading definition").start();
     try {
-      const spinner = ora("loading definition").start();
       const result = await reqData(`/word/${word}/definitions`, "definitions");
       spinner.stop();
       printDefinition(result);
       return resolve();
     } catch (e) {
+      spinner.stop();
       return reject(e);
     }
   });
@@ -119,13 +120,14 @@ function getDefinition(word) {
 } */
 function getSynonyms(word) {
   return new Promise(async (resolve, reject) => {
+    const spinner = ora("loading synonyms").start();
     try {
-      const spinner = ora("loading synonyms").start();
       const result = await reqData(`/word/${word}/relatedWords`, "synonyms");
       spinner.stop();
       printRelatedWord(result, "synonym");
       return resolve();
     } catch (e) {
+      spinner.stop();
       return reject(e);
     }
   });
@@ -146,13 +148,14 @@ function getSynonyms(word) {
 } */
 function getAntonyms(word) {
   return new Promise(async (resolve, reject) => {
+    const spinner = ora("loading antonyms").start();
     try {
-      const spinner = ora("loading antonyms").start();
       const result = await reqData(`/word/${word}/relatedWords`, "antonyms");
       spinner.stop();
       printRelatedWord(result, "antonym");
       return resolve();
     } catch (e) {
+      spinner.stop();
       return reject(e);
     }
   });
@@ -173,13 +176,14 @@ function getAntonyms(word) {
 } */
 function getExamples(word) {
   return new Promise(async (resolve, reject) => {
+    const spinner = ora("loading examples").start();
     try {
-      const spinner = ora("loading examples").start();
       const result = await reqData(`/word/${word}/examples`, "examples");
       spinner.stop();
       printExamples(result);
       return resolve();
     } catch (e) {
+      spinner.stop();
       return reject(e);
     }
   });
@@ -209,19 +213,22 @@ async function jumbleWord(word) {}
 function letsPlay() {
   return new Promise(async (resolve, reject) => {
     try {
+      log(chalk.underline.italic(`let's play\n`));
       //   const spinner = ora("loading...").start();
       const result = await reqData(`/words/randomWord`);
       //   spinner.stop();
       let word = result.data && result.data.word;
-      //   word = "single";
+      word = "single";
       if (word) {
+        log("%%%%%% " + word);
         await play(word);
-        log(word);
+        log("~~~~~~~~~~~~~~~~~~~~~~~");
         return resolve();
       } else {
         return reject(`dictionary unavailable`);
       }
     } catch (e) {
+      console.log("$$4@", e);
       return reject(`sorry can't play now. dictionary unavailable`);
     }
   });
@@ -341,6 +348,7 @@ function play(word) {
     try {
       await getHints(word);
       await mainQ(word);
+      log("got hint");
       return resolve();
     } catch (e) {
       return reject(e);
@@ -349,10 +357,10 @@ function play(word) {
 }
 
 function askQuestion(word) {
-  return new Promise(async (resolve, reject) => {
+  return new Promise((resolve, reject) => {
     try {
       rl.question(
-        `\nGuess the word ${(cnt > 0 && "again") || ""}?\nYour answer : `,
+        `\nGuess the word ${(cnt > 0 && "again") || ""}?\nYour answer :- `,
         function(answer) {
           log("ans==>", answer);
           cnt++;
@@ -360,11 +368,13 @@ function askQuestion(word) {
             console.log("\nYeah, you guessed the right word!");
             return resolve(true);
           } else {
+            console.log("@@@@@@@");
             return resolve(false);
           }
         }
       );
     } catch (e) {
+      console.log("****", e);
       return reject(e);
     }
   });
@@ -398,6 +408,7 @@ function mainQ(word) {
   return new Promise(async (resolve, reject) => {
     try {
       const answer = await askQuestion(word);
+      log("$$$$$$", answer);
       if (answer) {
         rl.close();
         return resolve();
@@ -486,7 +497,7 @@ function printDefinition(result) {
     definitions.forEach(d => {
       d && d.text && log(`* ${d.text}`);
     });
-  log("");
+  // log("");
 }
 
 function printRelatedWord(result, relationshipType) {
@@ -505,7 +516,7 @@ function printRelatedWord(result, relationshipType) {
     relatedWords[0].words.forEach(s => {
       s && log(`* ${s}`);
     });
-  log("");
+  // log("");
 }
 
 function printExamples(result) {
@@ -519,5 +530,5 @@ function printExamples(result) {
     examples.forEach(ex => {
       ex && ex.text && log(`* ${ex.text}`);
     });
-  log("");
+  // log("");
 }
