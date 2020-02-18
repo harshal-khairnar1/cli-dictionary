@@ -66,4 +66,21 @@ select : `,
 		console.log('\nBYE BYE !!!');
 		process.exit(0);
 	});
-})();
+})
+
+function shuffle(word){
+  if(!word || !(word.trim().length > 0)) return Promise.resolve('');
+
+  let shuffled = word.trim().split('').sort(function(){return 0.5-Math.random()}).join('');
+
+  if(shuffled.trim()===word.trim()) 
+	return shuffle(word);
+
+  return Promise.resolve(shuffled);
+}
+
+shuffle(null)
+ .then(res=>{  
+	console.log(res);
+        process.exit(0);
+});
