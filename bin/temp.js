@@ -19,7 +19,7 @@ const rl = readline.createInterface({
 		});
 	}
 
-	function main() {
+	function mainQ() {
 		askQuestion(answer => {
 			if (answer) {
 				rl.close();
@@ -48,10 +48,10 @@ select : `,
 				if (choice == '3') {
 					rl.close();
 				} else if (choice == '1') {
-					main();
+					mainQ();
 				} else if (choice == '2') {
 					console.log('\nYour Hint: ');
-					main();
+					mainQ();
 				} else {
 					console.log(`\nInvalid choice`);
 					rl.close();
